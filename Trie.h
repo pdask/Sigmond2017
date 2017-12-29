@@ -15,16 +15,49 @@
 #include <list>
 #include <string.h>
 
-#define DELETE  0
+#define SIZE  128
 #define IGNORE  1
 #define IS_LEAF 2
 
 using namespace std;
 
+struct Word {
+    char *data;
+    size_t len;
+
+    Word(char*);
+    ~Word();
+};
+
+struct Text {
+    char *data;
+    size_t len;
+    size_t *index;
+    size_t size;
+
+    Text(const char *);
+    Text(Text *, size_t);
+    ~Text();
+    void expand(Text *, size_t);
+
+    bool isSubtext(Text *);
+    size_t common(Text *);
+    void print();
+};
+
 struct TrieNode {
-    char *key;
-    bool leaf;
-    list<TrieNode *> next;
+    Text *key;
+    unsigned char *leaf;
+    TrieNode ***next;
+    size_t index;
+    size_t *sizes; //size of the 2nd dimension of
+
+    TrieNode(Text *, size_t);
+    void add(Text *, size_t);
+    void del(Text *, size_t);
+    void query(Text *, size_t, string);
+    void query_all(Text *);
+    void print(string);
 };
 
 void add(TrieNode *, char *);
@@ -34,18 +67,5 @@ void print(TrieNode *, string);
 bool del(TrieNode *, char *);
 
 
-struct TrieNode2 {
-    size_t key;
-    size_t size;
-    bool leaf;
-    list<TrieNode *> next;
-};
-
-void add(TrieNode2 *, char *);
-void query(TrieNode2 *, char *);
-void query_all(TrieNode2 *, char *);
-
-
 
 #endif /* TRIE_H */
-
